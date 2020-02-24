@@ -16,7 +16,7 @@ class UnitCircle(GraphScene):
 
     def construct(self):
         self.setup_axes()
-        circle = Circle(color=WHITE, radius=1.75)
+        circle = Circle(color=BLUE, radius=1.75)
 
         self.play(Write(circle))
 
@@ -36,7 +36,7 @@ class UnitCircle2(GraphScene):
 
     def construct(self):
         self.setup_axes()
-        circle = Circle(color=RED, radius=2.63)
+        circle = Circle(color=BLUE, radius=2.63)
 
         self.play(Write(circle))
 
@@ -65,14 +65,22 @@ class CylindricalCoordinates(ThreeDScene):
         axes = ThreeDAxes()
         self.add(axes)
 
-        self.set_camera_orientation(phi=75*DEGREES, theta=15*DEGREES)
+        self.set_camera_orientation(phi=75*DEGREES, theta=5*DEGREES)
+
+        coordinates_r1 = ParametricFunction(
+            lambda t : np.array([
+                4 * t,
+                0,
+                0
+            ]), t_min=0, t_max=1, color=BLUE
+        )
 
         coordinates_r = ParametricFunction(
             lambda t : np.array([
                 t * (math.sqrt(3) * 2),
                 2 * t,
                 0
-            ]), t_min=0, t_max=1, color=RED
+            ]), t_min=0, t_max=1, color=BLUE
         )
 
         coordinates_t = ParametricFunction(
@@ -80,7 +88,7 @@ class CylindricalCoordinates(ThreeDScene):
                 4 * np.cos(t),
                 4 * np.sin(t),
                 0
-            ]), t_min=0, t_max=PI/6, color=RED
+            ]), t_min=0, t_max=PI/6, color=WHITE
         )
 
         coordinates_s = ParametricFunction(
@@ -91,33 +99,106 @@ class CylindricalCoordinates(ThreeDScene):
             ]), t_min=0, t_max=2, color=RED
         )
 
+        dashed_r1 = DashedVMobject(coordinates_r1)
+
         dashed_r = DashedVMobject(coordinates_r)
         dashed_t = DashedVMobject(coordinates_t)
         dashed_s = DashedVMobject(coordinates_s)
 
-        # text_begin = TextMobject("t")
-        # text_middle = TextMobject("r")
-        # text_end = TextMobject("s")
+        text_t = TextMobject("t", color=WHITE)
+        text_r = TextMobject("r", color=BLUE)
+        text_s = TextMobject("s", color=RED)
 
-        # self.add_fixed_in_frame_mobjects(text_begin)
-        # text_begin.move_to(np.array([0, -2, 0]))
-        # self.add_fixed_in_frame_mobjects(text_middle)
-        # text_middle.move_to(np.array([3/4, -1/4, 0]))
-        # self.add_fixed_in_frame_mobjects(text_end)
-        # text_end.move_to(np.array([7/4, 0, 0]))
+        text_t.move_to(np.array([1/4, -2, 0]))
+        text_r.move_to(np.array([-1/2, -1/2, 0]))
+        text_s.move_to(np.array([2, 0, 0]))
 
-        # self.add_fixed_in_frame_mobjects(text_middle)
-        # text_middle.move_to(UL)
-
-        # self.add_fixed_in_frame_mobjects(text_end)
-        # text_end.move_to(UL)
-
-        self.play(ShowCreation(dashed_t))
-        self.play(Write(TextMobject("t").move_to(np.array([0, -2, 0]))))
+        self.begin_ambient_camera_rotation()
+        self.add_fixed_in_frame_mobjects(text_r)
+        self.play(ShowCreation(dashed_r1), Write(text_r))
         self.wait()
-        self.play(ShowCreation(dashed_r))
-        self.play(Write(TextMobject("r").move_to(np.array([3/4, -1/4, 0]))))
+        self.play(ShowCreation(dashed_t), Transform(dashed_r1, dashed_r), ReplacementTransform(text_r, text_t))
+        self.add_fixed_in_frame_mobjects(text_t)
         self.wait()
-        self.play(ShowCreation(dashed_s))
-        self.play(Write(TextMobject("s").move_to(np.array([7/4, 0, 0]))))
+        self.play(ShowCreation(dashed_s), ReplacementTransform(text_t, text_s))
+        self.add_fixed_in_frame_mobjects(text_s)
+        self.wait(2)
+
+
+class CylinderConversionFactor(Scene):
+    def construct(self):
+        # TODO : MAKE A MATRIX WITH THE DIFFERENT COMPONENTS AND ANIMATE TO COMPUTE THE CONVERSION FACTOR
+        print("TODO")
+
+
+class SphericalCoordinates(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.add(axes)
+
+        self.set_camera_orientation(phi=75*DEGREES, theta=5*DEGREES)
+
+        coordinates_r1 = ParametricFunction(
+            lambda t : np.array([
+                0,
+                0,
+                4 * t
+            ]), t_min=0, t_max=1, color=BLUE
+        )
+
+        coordinates_r2 = ParametricFunction(
+            lambda t : np.array([
+                t * (math.sqrt(3) * 2),
+                2 * t,
+                0
+            ]), t_min=0, t_max=1, color=BLUE
+        )
+
+        coordinates_r = ParametricFunction(
+            lambda t : np.array([
+                (2 * math.sqrt(3)) * t,
+                2 * t,
+                2 * t
+            ]), t_min=0, t_max=1, color=BLUE
+        )
+
+        coordinates_t = ParametricFunction(
+            lambda t : np.array([
+                4 * np.cos(t),
+                4 * np.sin(t),
+                0
+            ]), t_min=0, t_max=PI/6, color=WHITE
+        )
+
+        coordinates_s = ParametricFunction(
+            lambda t : np.array([
+                2 * math.sqrt(3),
+                2,
+                t
+            ]), t_min=0, t_max=2, color=RED
+        )
+
+        dashed_r1 = DashedVMobject(coordinates_r1)
+
+        dashed_r = DashedVMobject(coordinates_r)
+        dashed_t = DashedVMobject(coordinates_t)
+        dashed_s = DashedVMobject(coordinates_s)
+
+        text_t = TextMobject("t", color=WHITE)
+        text_r = TextMobject("r", color=BLUE)
+        text_s = TextMobject("s", color=RED)
+
+        text_t.move_to(np.array([1/4, -2, 0]))
+        text_r.move_to(np.array([-1/2, -1/2, 0]))
+        text_s.move_to(np.array([2, 0, 0]))
+
+        self.begin_ambient_camera_rotation()
+        self.add_fixed_in_frame_mobjects(text_r)
+        self.play(ShowCreation(dashed_r1), Write(text_r))
+        self.wait()
+        self.play(ShowCreation(dashed_t), Transform(dashed_r1, dashed_r), ReplacementTransform(text_r, text_t))
+        self.add_fixed_in_frame_mobjects(text_t)
+        self.wait()
+        self.play(ShowCreation(dashed_s), ReplacementTransform(text_t, text_s))
+        self.add_fixed_in_frame_mobjects(text_s)
         self.wait(2)
