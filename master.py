@@ -142,43 +142,54 @@ class SphericalCoordinates(ThreeDScene):
             lambda t : np.array([
                 0,
                 0,
-                4 * t
+                2 * t
             ]), t_min=0, t_max=1, color=BLUE
         )
 
         coordinates_r2 = ParametricFunction(
             lambda t : np.array([
-                t * (math.sqrt(3) * 2),
-                2 * t,
-                0
+                (math.sqrt(3) * 1) * t,
+                0,
+                1 * t
             ]), t_min=0, t_max=1, color=BLUE
         )
 
         coordinates_r = ParametricFunction(
             lambda t : np.array([
-                (2 * math.sqrt(3)) * t,
-                2 * t,
-                2 * t
+                (2 * np.cos(PI/6) * np.sin(PI/3)) * t,
+                (2 * np.sin(PI/6) * np.sin(PI/3)) * t,
+                (2 * np.cos(PI/3)) * t
             ]), t_min=0, t_max=1, color=BLUE
         )
 
         coordinates_t = ParametricFunction(
             lambda t : np.array([
-                4 * np.cos(t),
-                4 * np.sin(t),
+                2 * np.cos(t),
+                2 * np.sin(t),
                 0
             ]), t_min=0, t_max=PI/6, color=WHITE
         )
 
+        coordinates_s1 = ParametricFunction(
+            lambda t : np.array([
+                (2 * np.sin(t)),
+                0,
+                (2 * np.cos(t))
+            ]), t_min=0, t_max=PI/3, color=RED
+        )
+
         coordinates_s = ParametricFunction(
             lambda t : np.array([
-                2 * math.sqrt(3),
-                2,
-                t
-            ]), t_min=0, t_max=2, color=RED
+                (2 * np.cos(PI/6) * np.sin(t)),
+                (2 * np.sin(PI/6) * np.sin(t)),
+                (2 * np.cos(t))
+            ]), t_min=0, t_max=PI/3, color=RED
         )
 
         dashed_r1 = DashedVMobject(coordinates_r1)
+        dashed_r2 = DashedVMobject(coordinates_r2)
+
+        dashed_s1 = DashedVMobject(coordinates_s1)
 
         dashed_r = DashedVMobject(coordinates_r)
         dashed_t = DashedVMobject(coordinates_t)
@@ -194,11 +205,9 @@ class SphericalCoordinates(ThreeDScene):
 
         self.begin_ambient_camera_rotation()
         self.add_fixed_in_frame_mobjects(text_r)
-        self.play(ShowCreation(dashed_r1), Write(text_r))
+        self.play(ShowCreation(dashed_r1))
         self.wait()
-        self.play(ShowCreation(dashed_t), Transform(dashed_r1, dashed_r), ReplacementTransform(text_r, text_t))
-        self.add_fixed_in_frame_mobjects(text_t)
+        self.play(ShowCreation(dashed_s1), ReplacementTransform(dashed_r1, dashed_r2))
         self.wait()
-        self.play(ShowCreation(dashed_s), ReplacementTransform(text_t, text_s))
-        self.add_fixed_in_frame_mobjects(text_s)
+        self.play(ShowCreation(dashed_t), ReplacementTransform(dashed_r2, dashed_r), ReplacementTransform(dashed_s1, dashed_s))
         self.wait(2)
