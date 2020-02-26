@@ -16,7 +16,7 @@ class UnitCircle(GraphScene):
 
     def construct(self):
         self.setup_axes()
-        circle = Circle(color=BLUE, radius=1.75)
+        circle = Circle(color=WHITE, radius=1.75)
 
         self.play(Write(circle))
 
@@ -41,6 +41,34 @@ class UnitCircle2(GraphScene):
         self.play(Write(circle))
 
 
+class CylinderHeight(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.add(axes)
+
+        self.set_camera_orientation(phi=75*DEGREES,theta=-45*DEGREES)
+        self.begin_ambient_camera_rotation()
+        base = ParametricFunction(
+            lambda t : np.array([
+                1.5 * np.cos(t),
+                1.5 * np.sin(t),
+                0
+            ]), t_min=0, t_max=TAU, color=BLUE
+        )
+
+        height = ParametricFunction(
+            lambda t : np.array([
+                1.5 * np.cos(PI/4),
+                1.5 * np.sin(PI/4),
+                (3 / 4) * t
+            ]), t_min=0, t_max=2, color=GREEN
+        )
+
+        self.add(base)
+        self.play(ShowCreation(height), run_time=5)
+        self.wait(2)
+
+
 class Cylinder(ThreeDScene):
     def construct(self):
         axes = ThreeDAxes()
@@ -53,10 +81,10 @@ class Cylinder(ThreeDScene):
                 1.5 * np.cos(v),
                 1.5 * np.sin(v),
                 u
-            ]), u_min=0, u_max=2, v_min=0, v_max=TAU, checkerboard_colors=[RED_D, RED_E], resolution=(15, 32)
+            ]), u_min=0, u_max=2, v_min=0, v_max=TAU, checkerboard_colors=[GREEN_D, GREEN_E], resolution=(15, 32)
         )
 
-        self.play(ShowCreation(cylinder), run_time=3)
+        self.play(ShowCreation(cylinder), run_time=5)
         self.wait(2)
 
 
@@ -69,7 +97,7 @@ class CylindricalCoordinates(ThreeDScene):
 
         coordinates_r1 = ParametricFunction(
             lambda t : np.array([
-                4 * t,
+                3 * t,
                 0,
                 0
             ]), t_min=0, t_max=1, color=BLUE
@@ -77,26 +105,26 @@ class CylindricalCoordinates(ThreeDScene):
 
         coordinates_r = ParametricFunction(
             lambda t : np.array([
-                t * (math.sqrt(3) * 2),
-                2 * t,
+                (3 * np.cos(PI/4)) * t,
+                (3 * np.sin(PI/4)) * t,
                 0
             ]), t_min=0, t_max=1, color=BLUE
         )
 
         coordinates_t = ParametricFunction(
             lambda t : np.array([
-                4 * np.cos(t),
-                4 * np.sin(t),
+                3 * np.cos(t),
+                3 * np.sin(t),
                 0
-            ]), t_min=0, t_max=PI/6, color=WHITE
+            ]), t_min=0, t_max=PI/4, color=WHITE
         )
 
         coordinates_s = ParametricFunction(
             lambda t : np.array([
-                2 * math.sqrt(3),
-                2,
-                t
-            ]), t_min=0, t_max=2, color=RED
+                3 * np.cos(PI/4),
+                3 * np.sin(PI/4),
+                (3 / 4) * t
+            ]), t_min=0, t_max=2, color=GREEN
         )
 
         dashed_r1 = DashedVMobject(coordinates_r1)
@@ -107,20 +135,20 @@ class CylindricalCoordinates(ThreeDScene):
 
         text_t = TextMobject("t", color=WHITE)
         text_r = TextMobject("r", color=BLUE)
-        text_s = TextMobject("s", color=RED)
+        text_s = TextMobject("s", color=GREEN)
 
-        text_t.move_to(np.array([1/4, -2, 0]))
+        text_t.move_to(np.array([1/4, -3/2, 0]))
         text_r.move_to(np.array([-1/2, -1/2, 0]))
-        text_s.move_to(np.array([2, 0, 0]))
+        text_s.move_to(np.array([9/4, 0, 0]))
 
         self.begin_ambient_camera_rotation()
         self.add_fixed_in_frame_mobjects(text_r)
-        self.play(ShowCreation(dashed_r1), Write(text_r))
+        self.play(ShowCreation(coordinates_r1), Write(text_r))
         self.wait()
-        self.play(ShowCreation(dashed_t), Transform(dashed_r1, dashed_r), ReplacementTransform(text_r, text_t))
+        self.play(ShowCreation(coordinates_t), Transform(coordinates_r1, coordinates_r), ReplacementTransform(text_r, text_t))
         self.add_fixed_in_frame_mobjects(text_t)
         self.wait()
-        self.play(ShowCreation(dashed_s), ReplacementTransform(text_t, text_s))
+        self.play(ShowCreation(coordinates_s), ReplacementTransform(text_t, text_s))
         self.add_fixed_in_frame_mobjects(text_s)
         self.wait(2)
 
@@ -143,7 +171,7 @@ class SphericalCoordinates(ThreeDScene):
                 0,
                 0,
                 3 * t
-            ]), t_min=0, t_max=1, color=BLUE
+            ]), t_min=0, t_max=1, color=PINK
         )
 
         coordinates_r2 = ParametricFunction(
@@ -151,15 +179,15 @@ class SphericalCoordinates(ThreeDScene):
                 (math.sqrt(3) * 3 / 2) * t,
                 0,
                 3 / 2 * t
-            ]), t_min=0, t_max=1, color=BLUE
+            ]), t_min=0, t_max=1, color=PINK
         )
 
         coordinates_r = ParametricFunction(
             lambda t : np.array([
-                (3 * np.cos(PI/6) * np.sin(PI/3)) * t,
-                (3 * np.sin(PI/6) * np.sin(PI/3)) * t,
+                (3 * np.cos(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.sin(PI/4) * np.sin(PI/3)) * t,
                 (3 * np.cos(PI/3)) * t
-            ]), t_min=0, t_max=1, color=BLUE
+            ]), t_min=0, t_max=1, color=PINK
         )
 
         coordinates_t = ParametricFunction(
@@ -167,7 +195,7 @@ class SphericalCoordinates(ThreeDScene):
                 3 * np.cos(t),
                 3 * np.sin(t),
                 0
-            ]), t_min=0, t_max=PI/6, color=WHITE
+            ]), t_min=0, t_max=PI/4, color=WHITE
         )
 
         coordinates_s1 = ParametricFunction(
@@ -180,8 +208,8 @@ class SphericalCoordinates(ThreeDScene):
 
         coordinates_s = ParametricFunction(
             lambda t : np.array([
-                (3 * np.cos(PI/6) * np.sin(t)),
-                (3 * np.sin(PI/6) * np.sin(t)),
+                (3 * np.cos(PI/4) * np.sin(t)),
+                (3 * np.sin(PI/4) * np.sin(t)),
                 (3 * np.cos(t))
             ]), t_min=0, t_max=PI/3, color=RED
         )
@@ -196,22 +224,254 @@ class SphericalCoordinates(ThreeDScene):
         dashed_s = DashedVMobject(coordinates_s)
 
         text_t = TextMobject("t", color=WHITE)
-        text_r = TextMobject("r", color=BLUE)
+        text_r = TextMobject("r", color=PINK)
         text_s = TextMobject("s", color=RED)
 
         text_t.move_to(np.array([1/4, -3/2, 0]))
-        text_r.move_to(np.array([-3/4, 2, 0]))
-        text_s.move_to(np.array([-3/4, 3, 0]))
+        text_r.move_to(np.array([-3/4, 3/2, 0]))
+        text_s.move_to(np.array([-3/4, 9/4, 0]))
 
         self.begin_ambient_camera_rotation()
         self.add_fixed_in_frame_mobjects(text_r)
-        self.play(ShowCreation(dashed_r1), Write(text_r))
+        self.play(ShowCreation(coordinates_r1), Write(text_r))
         self.wait()
-        self.play(ShowCreation(dashed_s1), ReplacementTransform(dashed_r1, dashed_r2), ReplacementTransform(text_r, text_s))
+        self.play(ShowCreation(coordinates_s1), ReplacementTransform(coordinates_r1, coordinates_r2), ReplacementTransform(text_r, text_s))
         self.add_fixed_in_frame_mobjects(text_s)
         self.wait()
-        self.play(ShowCreation(dashed_t), ReplacementTransform(dashed_r2, dashed_r), ReplacementTransform(dashed_s1, dashed_s), ReplacementTransform(text_s, text_t))
+        self.play(ShowCreation(coordinates_t), ReplacementTransform(coordinates_r2, coordinates_r), ReplacementTransform(coordinates_s1, coordinates_s), ReplacementTransform(text_s, text_t))
         self.add_fixed_in_frame_mobjects(text_t)
+        self.wait(2)
+
+
+class CombinedCoordinates(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.add(axes)
+
+        self.set_camera_orientation(phi=75*DEGREES, theta=13*DEGREES)
+
+        coordinates_t = ParametricFunction(
+            lambda t : np.array([
+                3 * np.cos(t) * np.sin(PI/3),
+                3 * np.sin(t) * np.sin(PI/3),
+                0
+            ]), t_min=0, t_max=PI/4, color=WHITE
+        )
+
+        coordinates_s_sphere = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(t)),
+                (3 * np.sin(PI/4) * np.sin(t)),
+                (3 * np.cos(t))
+            ]), t_min=0, t_max=PI/3, color=RED
+        )
+
+        coordinates_s_cylinder = ParametricFunction(
+            lambda t : np.array([
+                3 * np.cos(PI/4) * np.sin(PI/3),
+                3 * np.sin(PI/4) * np.sin(PI/3),
+                (3 * np.cos(PI/3)) * t
+            ]), t_min=0, t_max=1, color=GREEN
+        )
+
+        coordinates_r_sphere = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.sin(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.cos(PI/3)) * t
+            ]), t_min=0, t_max=1, color=PINK
+        )
+
+        coordinates_r_cylinder = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.sin(PI/4) * np.sin(PI/3)) * t,
+                0
+            ]), t_min=0, t_max=1, color=BLUE
+        )
+
+        self.play(ShowCreation(coordinates_t), ShowCreation(coordinates_s_sphere), ShowCreation(coordinates_s_cylinder), ShowCreation(coordinates_r_sphere), ShowCreation(coordinates_r_cylinder))
+
+
+class CombinedCoordinatesHighlighted(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.add(axes)
+
+        self.set_camera_orientation(phi=75*DEGREES, theta=13*DEGREES)
+
+        coordinates_t = ParametricFunction(
+            lambda t : np.array([
+                3 * np.cos(t) * np.sin(PI/3),
+                3 * np.sin(t) * np.sin(PI/3),
+                0
+            ]), t_min=0, t_max=PI/4
+        )
+
+        coordinates_s_sphere = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(t)),
+                (3 * np.sin(PI/4) * np.sin(t)),
+                (3 * np.cos(t))
+            ]), t_min=0, t_max=PI/3
+        )
+
+        coordinates_s_cylinder = ParametricFunction(
+            lambda t : np.array([
+                3 * np.cos(PI/4) * np.sin(PI/3),
+                3 * np.sin(PI/4) * np.sin(PI/3),
+                (3 * np.cos(PI/3)) * t
+            ]), t_min=0, t_max=1, color=GOLD
+        )
+
+        coordinates_r_sphere = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.sin(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.cos(PI/3)) * t
+            ]), t_min=0, t_max=1, color=GOLD
+        )
+
+        coordinates_r_cylinder = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.sin(PI/4) * np.sin(PI/3)) * t,
+                0
+            ]), t_min=0, t_max=1, color=GOLD
+        )
+
+        self.play(ShowCreation(coordinates_t), ShowCreation(coordinates_s_sphere), ShowCreation(coordinates_s_cylinder), ShowCreation(coordinates_r_sphere), ShowCreation(coordinates_r_cylinder))
+
+
+class CombinedCoordinatesOrthogonal(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.add(axes)
+
+        self.set_camera_orientation(phi=90*DEGREES, theta=-45*DEGREES)
+
+        coordinates_t = ParametricFunction(
+            lambda t : np.array([
+                3 * np.cos(t) * np.sin(PI/3),
+                3 * np.sin(t) * np.sin(PI/3),
+                0
+            ]), t_min=0, t_max=PI/4, color=WHITE
+        )
+
+        coordinates_s_sphere = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(t)),
+                (3 * np.sin(PI/4) * np.sin(t)),
+                (3 * np.cos(t))
+            ]), t_min=0, t_max=PI/3, color=RED
+        )
+
+        coordinates_s_cylinder = ParametricFunction(
+            lambda t : np.array([
+                3 * np.cos(PI/4) * np.sin(PI/3),
+                3 * np.sin(PI/4) * np.sin(PI/3),
+                (3 * np.cos(PI/3)) * t
+            ]), t_min=0, t_max=1, color=GREEN
+        )
+
+        coordinates_r_sphere = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.sin(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.cos(PI/3)) * t
+            ]), t_min=0, t_max=1, color=PINK
+        )
+
+        coordinates_r_cylinder = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.sin(PI/4) * np.sin(PI/3)) * t,
+                0
+            ]), t_min=0, t_max=1, color=BLUE
+        )
+
+        self.play(ShowCreation(coordinates_t), ShowCreation(coordinates_s_sphere), ShowCreation(coordinates_s_cylinder), ShowCreation(coordinates_r_sphere), ShowCreation(coordinates_r_cylinder))
+
+
+class OrthogonalTransform(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.add(axes)
+
+        self.set_camera_orientation(phi=90*DEGREES, theta=-45*DEGREES)
+
+        coordinates_s1_sphere = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(t)),
+                (3 * np.sin(PI/4) * np.sin(t)),
+                (3 * np.cos(t))
+            ]), t_min=0, t_max=PI/3, color=RED
+        )
+
+        coordinates_s_sphere = ParametricFunction(
+            lambda t : np.array([
+                ((1 / 2) * np.cos(PI/4) * np.sin(t)),
+                ((1 / 2) * np.sin(PI/4) * np.sin(t)),
+                ((1 / 2) * np.cos(t))
+            ]), t_min=0, t_max=PI/3, color=RED
+        )
+
+        coordinates_s1_cylinder = ParametricFunction(
+            lambda t : np.array([
+                3 * np.cos(PI/4) * np.sin(PI/3),
+                3 * np.sin(PI/4) * np.sin(PI/3),
+                (3 * np.cos(PI/3)) * t
+            ]), t_min=0, t_max=1, color=GREEN
+        )
+
+        coordinates_s_cylinder = ParametricFunction(
+            lambda t : np.array([
+                0,
+                0,
+                (3 * np.cos(PI/3)) * t
+            ]), t_min=0, t_max=1, color=GREEN
+        )
+
+        coordinates_r_sphere = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.sin(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.cos(PI/3)) * t
+            ]), t_min=0, t_max=1, color=PINK
+        )
+
+        coordinates_r1_cylinder = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.sin(PI/4) * np.sin(PI/3)) * t,
+                0
+            ]), t_min=0, t_max=1, color=BLUE
+        )
+
+        coordinates_r_cylinder = ParametricFunction(
+            lambda t : np.array([
+                (3 * np.cos(PI/4) * np.sin(PI/3)) * t,
+                (3 * np.sin(PI/4) * np.sin(PI/3)) * t,
+                3 * np.cos(PI/3)
+            ]), t_min=0, t_max=1, color=BLUE
+        )
+
+        text_s1 = TexMobject(r"s_1", color=GREEN)
+        text_s2 = TexMobject(r"s_2", color=RED)
+        text_r1 = TexMobject(r"r_1", color=BLUE)
+        text_r2 = TexMobject(r"r_2", color=PINK)
+
+        text_s1.move_to([-1/2, 3/4, 0])
+        text_s2.move_to([1/2, 3/4, 0])
+        text_r1.move_to([5/4, 7/4, 0])
+        text_r2.move_to([3/2, 2/5, 0])
+
+        self.play(ShowCreation(coordinates_s1_sphere), ShowCreation(coordinates_s1_cylinder), ShowCreation(coordinates_r_sphere), ShowCreation(coordinates_r1_cylinder))
+        self.wait()
+        self.play(ReplacementTransform(coordinates_r1_cylinder, coordinates_r_cylinder), ReplacementTransform(coordinates_s1_cylinder, coordinates_s_cylinder), ReplacementTransform(coordinates_s1_sphere, coordinates_s_sphere), run_time=3)
+        self.wait()
+        self.add_fixed_in_frame_mobjects(text_s1, text_s2, text_r1, text_r2)
+        self.play(Write(text_s1), Write(text_s2), Write(text_r1), Write(text_r2))
         self.wait(2)
 
 
@@ -237,7 +497,7 @@ class SphereTThenS(ThreeDScene):
 class SphereSThenT(ThreeDScene):
     def construct(self):
         axes = ThreeDAxes()
-        self.set_camera_orientation(phi=75*DEGREES,theta=-30*DEGREES)
+        self.set_camera_orientation(phi=75*DEGREES,theta=-60*DEGREES)
 
         self.add(axes)
         self.begin_ambient_camera_rotation()
@@ -251,4 +511,18 @@ class SphereSThenT(ThreeDScene):
             resolution=(15, 32))
 
         self.play(LaggedStart(ShowCreation(sphere)), run_time=5)
+        self.wait(2)
+
+
+class SphereToCube(ThreeDScene):
+    def construct(self):
+        sphere = Sphere(radius=1.3, checkerboard_colors=[RED_E, RED_E])
+        cube = Cube(fill_color=PURPLE_A)
+
+        self.set_camera_orientation(phi=60*DEGREES, distance=2.5)
+        self.begin_ambient_camera_rotation(rate=0.2)
+
+        self.play(ShowCreation(sphere))
+        self.wait(2)
+        self.play(ReplacementTransform(sphere, cube))
         self.wait(2)
