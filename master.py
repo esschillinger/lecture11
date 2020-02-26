@@ -127,12 +127,6 @@ class CylindricalCoordinates(ThreeDScene):
             ]), t_min=0, t_max=2, color=GREEN
         )
 
-        dashed_r1 = DashedVMobject(coordinates_r1)
-
-        dashed_r = DashedVMobject(coordinates_r)
-        dashed_t = DashedVMobject(coordinates_t)
-        dashed_s = DashedVMobject(coordinates_s)
-
         text_t = TextMobject("t", color=WHITE)
         text_r = TextMobject("r", color=BLUE)
         text_s = TextMobject("s", color=GREEN)
@@ -213,15 +207,6 @@ class SphericalCoordinates(ThreeDScene):
                 (3 * np.cos(t))
             ]), t_min=0, t_max=PI/3, color=RED
         )
-
-        dashed_r1 = DashedVMobject(coordinates_r1)
-        dashed_r2 = DashedVMobject(coordinates_r2)
-
-        dashed_s1 = DashedVMobject(coordinates_s1)
-
-        dashed_r = DashedVMobject(coordinates_r)
-        dashed_t = DashedVMobject(coordinates_t)
-        dashed_s = DashedVMobject(coordinates_s)
 
         text_t = TextMobject("t", color=WHITE)
         text_r = TextMobject("r", color=PINK)
