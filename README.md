@@ -28,7 +28,7 @@ Note: The above arguments can be combined, for instance
 $ manim master.py SphereSThenT -mi
 ```
 will yield a medium-quality rendering (720p, 30fps) of the scene with declaration
-```sh
+```python
 class SphereSThenT(ThreeDScene):
     def construct(self):
         ...
