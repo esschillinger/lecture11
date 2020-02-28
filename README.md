@@ -6,8 +6,14 @@ Though the animations and images themselves currently in use are located at `/re
 
 In a terminal window:
 ```sh
-$ cd "C:\path\to\master"
+$ cd "C:\path\to\lecture11"
 $ python -m manim master.py <scene_class_name> <args>
+```
+
+Alternatively, you can render via the `manim` command, provided you've installed `manimlib` previously.
+```sh
+$ pip3 install manimlib
+$ manim master.py <scene_class_name> <args>
 ```
 
 `args` may take any of the following forms:
