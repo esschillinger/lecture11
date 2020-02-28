@@ -10,7 +10,7 @@ $ cd "C:\path\to\lecture11"
 $ python -m manim master.py <scene_class_name> <args>
 ```
 
-Alternatively, you can render via the `manim` command, provided you've installed `manimlib` previously.
+Alternatively, you can render via the `manim` command, provided you've installed `manimlib` previously:
 ```sh
 $ pip3 install manimlib
 $ manim master.py <scene_class_name> <args>
@@ -25,7 +25,7 @@ $ manim master.py <scene_class_name> <args>
 
 Note: The above arguments can be combined, for instance
 ```sh
-$ python -m manim master.py SphereSThenT -mi
+$ manim master.py SphereSThenT -mi
 ```
 will yield a medium-quality rendering (720p, 30fps) of the scene with declaration
 ```sh
