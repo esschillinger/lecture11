@@ -11,7 +11,7 @@ $ python -m manim master.py <scene_class_name> <args>
 ```
 
 Alternatively, you can render via the `manim` command, provided you've installed `manimlib` previously:
-```sh
+```bash
 $ pip3 install manimlib
 $ manim master.py <scene_class_name> <args>
 ```
@@ -24,7 +24,7 @@ $ manim master.py <scene_class_name> <args>
 * `-r <resolution>` to render in the specified resolution
 
 Note: The above arguments can be combined, for instance
-```sh
+```bash
 $ manim master.py SphereSThenT -mi
 ```
 will yield a medium-quality rendering (720p, 30fps) of the scene with declaration
