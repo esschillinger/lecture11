@@ -499,15 +499,10 @@ class SphereSThenT(ThreeDScene):
         self.wait(2)
 
 
-class SphereToCube(ThreeDScene):
+class CylinderToSphere(ThreeDScene):
     def construct(self):
-        sphere = Sphere(radius=1.3, checkerboard_colors=[RED_E, RED_E])
-        cube = Cube(fill_color=PURPLE_A)
-
-        self.set_camera_orientation(phi=60*DEGREES, distance=2.5)
-        self.begin_ambient_camera_rotation(rate=0.2)
-
-        self.play(ShowCreation(sphere))
-        self.wait(2)
-        self.play(ReplacementTransform(sphere, cube))
-        self.wait(2)
+        print("PLACEHOLDER")
+        # THIS ANIMATION SHOULD PLAY DIRECTLY AFTER THE TRIGONOMETRIC CONVERSION FROM CYLINDRICAL TO SPHERICAL IS COMPLETE
+        # The animation is mostly for fun, tbh... I just want to have a cool-looking anim in there so that people are impressed :D
+        # It doesn't have any intrinsic teaching value, just looks nice--adding it because Logan said he liked the SphereSThenT anim
+        # And Jack thought the 3D ReplacementTransform was satisfying, so I'll incorporate ReplacementTransform in a relevant way (THIS!)
