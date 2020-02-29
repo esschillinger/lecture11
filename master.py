@@ -501,8 +501,54 @@ class SphereSThenT(ThreeDScene):
 
 class CylinderToSphere(ThreeDScene):
     def construct(self):
-        print("PLACEHOLDER")
         # THIS ANIMATION SHOULD PLAY DIRECTLY AFTER THE TRIGONOMETRIC CONVERSION FROM CYLINDRICAL TO SPHERICAL IS COMPLETE
         # The animation is mostly for fun, tbh... I just want to have a cool-looking anim in there so that people are impressed :D
         # It doesn't have any intrinsic teaching value, just looks nice--adding it because Logan said he liked the SphereSThenT anim
         # And Jack thought the 3D ReplacementTransform was satisfying, so I'll incorporate ReplacementTransform in a relevant way (THIS!)
+
+        axes = ThreeDAxes()
+        self.set_camera_orientation(phi=75*DEGREES,theta=-60*DEGREES)
+
+        self.add(axes)
+        self.begin_ambient_camera_rotation()
+
+        '''
+        cylinder = ParametricSurface(
+            lambda u, v : np.array([
+                1.5*np.cos(v),
+                1.5*np.sin(v),
+                u
+            ]), u_min=0, u_max=3, v_min=0, v_max=TAU, checkerboard_colors=[GREEN_D, GREEN_E],
+            resolution=(15, 32)
+        )
+
+        sphere = ParametricSurface(
+            lambda u, v: np.array([
+                3*np.cos(u)*np.sin(v),
+                3*np.sin(u)*np.sin(v),
+                3*np.cos(v)
+            ]), u_min=0, u_max=TAU, v_min=0, v_max=PI, checkerboard_colors=[RED_D, RED_E],
+            resolution=(15, 32)
+            )
+        '''
+
+        sphere = ParametricSurface(
+            lambda u, v: np.array([
+                1.5*np.cos(u)*np.cos(v),
+                1.5*np.cos(u)*np.sin(v),
+                1.5*np.sin(u)
+            ]),v_min=0,v_max=TAU,u_min=-PI/2,u_max=PI/2,checkerboard_colors=[RED_D, RED_E],
+            resolution=(15, 32)).scale(2)
+
+        cylinder = ParametricSurface(
+            lambda u, v: np.array([
+                np.cos(TAU * v),
+                np.sin(TAU * v),
+                2 * (1 - u)
+            ]), checkerboard_colors=[GREEN_D, GREEN_E],
+            resolution=(6, 32))#.fade(0.5)
+
+        self.add(cylinder)
+        self.wait(2)
+        self.play(ReplacementTransform(cylinder, sphere), run_time=3)
+        self.wait(2)
