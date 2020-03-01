@@ -17,7 +17,82 @@ class TestTransform(ThreeDScene):
         self.play(ReplacementTransform(t2, t3))
 
 
+class AngleTest(ThreeDScene):
+    def construct(self):
+        degree_num_s = DecimalNumber(0, num_decimal_places=0)
+        time_0 = ValueTracker(0)
+        degree_num_s.add_updater(lambda num:num.set_value(time_0.get_value()))
+
+        degree_num_t = DecimalNumber(0, num_decimal_places=0)
+        time_1 = ValueTracker(0)
+        degree_num_t.add_updater(lambda num:num.set_value(time_1.get_value()))
+
+        degree_num_s.to_corner(UL + [-2, 0, 0])
+        degree_num_t.move_to(degree_num_s.get_center() + [0, -3/4, 0])
+
+        text_s = TextMobject("s:")
+        text_t = TextMobject("t:")
+
+        text_s.next_to(degree_num_s, LEFT)
+        text_t.next_to(degree_num_t, LEFT)
+
+        self.add_fixed_in_frame_mobjects(degree_num_s, degree_num_t, text_s, text_t)
+
+        duration_s = 1.15
+
+        self.play(
+            ApplyMethod(time_0.increment_value, 180, rate_func=smooth, run_time=duration_s)
+        )
+        self.play(
+            ApplyMethod(time_1.increment_value, 360, rate_func=smooth, run_time=5-duration_s)
+        )
+
+
 class ThreeDTest(ThreeDScene):
+    CONFIG = {
+        "x_min":-5,
+        "x_max": 5,
+        "y_min":-5,
+        "y_max": 5,
+        "z_min":-5,
+        "z_max": 5,
+    }
+
+    def construct(self):
+        axes = ThreeDAxes()
+        self.add(axes)
+        self.set_camera_orientation(phi=60 * DEGREES, theta=45 * DEGREES)
+
+        # angle counter
+        degree = TextMobject(
+            "Angle:",
+            tex_to_color_map={"Angle:":GREEN}
+        ).scale(0.8)
+        degreeNum = DecimalNumber(0, num_decimal_places=0)
+        # put the angle next to degreeNum left side
+        degree.next_to(degreeNum, LEFT)
+
+        # time object used to count
+        time = ValueTracker(0)
+        degreeNum.add_updater(lambda num:num.set_value(time.get_value()))
+
+        # rotate the group to the positive y-axis
+        angleGroup = VGroup(degree, degreeNum)
+        angleGroup.move_to(UP * 2 + OUT / 2)
+        angleGroup.rotate(PI / 2, axis=RIGHT)
+        angleGroup.rotate(PI / 2, axis=OUT)
+
+        # a dot for showing angle chaning
+        testDot = Dot(np.array((1, 0, 0)))
+        self.add(degreeNum)
+        self.play(Write(degree))
+        self.play(
+            Rotate(testDot, PI / 6, run_time=3, about_point=ORIGIN),
+            ApplyMethod(time.increment_value, 30.0, rate_func=smooth, run_time=3)
+        )
+
+
+class ThreeDTest2(ThreeDScene):
     CONFIG = {
         "x_min":-5,
         "x_max": 5,

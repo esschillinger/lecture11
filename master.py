@@ -451,7 +451,7 @@ class OrthogonalTransform(ThreeDScene):
         text_r1.move_to([5/4, 7/4, 0])
         text_r2.move_to([3/2, 2/5, 0])
 
-        self.play(ShowCreation(coordinates_s1_sphere), ShowCreation(coordinates_s1_cylinder), ShowCreation(coordinates_r_sphere), ShowCreation(coordinates_r1_cylinder))
+        self.add(coordinates_s1_sphere, coordinates_s1_cylinder, coordinates_r_sphere, coordinates_r1_cylinder)
         self.wait()
         self.play(ReplacementTransform(coordinates_r1_cylinder, coordinates_r_cylinder), ReplacementTransform(coordinates_s1_cylinder, coordinates_s_cylinder), ReplacementTransform(coordinates_s1_sphere, coordinates_s_sphere), run_time=3)
         self.wait()
@@ -479,6 +479,39 @@ class SphereTThenS(ThreeDScene):
         self.play(LaggedStart(ShowCreation(sphere)), run_time=5)
         self.wait(2)
 
+
+class AngleTThenS(ThreeDScene):
+    def construct(self):
+        degree_num_t = DecimalNumber(0, num_decimal_places=0)
+        time_0 = ValueTracker(0)
+        degree_num_t.add_updater(lambda num:num.set_value(time_0.get_value()))
+
+        degree_num_s = DecimalNumber(0, num_decimal_places=0)
+        time_1 = ValueTracker(0)
+        degree_num_s.add_updater(lambda num:num.set_value(time_1.get_value()))
+
+        degree_num_t.to_corner(UL + [-2, 0, 0])
+        degree_num_s.move_to(degree_num_t.get_center() + [0, -3/4, 0])
+
+        text_t = TextMobject("t:")
+        text_s = TextMobject("s:")
+
+        text_t.next_to(degree_num_t, LEFT)
+        text_s.next_to(degree_num_s, LEFT)
+
+        self.add_fixed_in_frame_mobjects(degree_num_t, degree_num_s, text_t, text_s)
+
+        duration_t = 1.15
+
+        self.play(
+            ApplyMethod(time_0.increment_value, 360, rate_func=smooth, run_time=duration_t)
+        )
+        self.play(
+            ApplyMethod(time_1.increment_value, 180, rate_func=smooth, run_time=5-1-duration_t)
+        )
+        self.wait(3)
+
+
 class SphereSThenT(ThreeDScene):
     def construct(self):
         axes = ThreeDAxes()
@@ -499,6 +532,112 @@ class SphereSThenT(ThreeDScene):
         self.wait(2)
 
 
+class AngleSThenT(ThreeDScene):
+    def construct(self):
+        degree_num_s = DecimalNumber(0, num_decimal_places=0)
+        time_0 = ValueTracker(0)
+        degree_num_s.add_updater(lambda num:num.set_value(time_0.get_value()))
+
+        degree_num_t = DecimalNumber(0, num_decimal_places=0)
+        time_1 = ValueTracker(0)
+        degree_num_t.add_updater(lambda num:num.set_value(time_1.get_value()))
+
+        degree_num_s.to_corner(UL + [-2, 0, 0])
+        degree_num_t.move_to(degree_num_s.get_center() + [0, -3/4, 0])
+
+        text_s = TextMobject("s:")
+        text_t = TextMobject("t:")
+
+        text_s.next_to(degree_num_s, LEFT)
+        text_t.next_to(degree_num_t, LEFT)
+
+        self.add_fixed_in_frame_mobjects(degree_num_s, degree_num_t, text_s, text_t)
+
+        duration_s = 1.15
+
+        self.play(
+            ApplyMethod(time_0.increment_value, 180, rate_func=smooth, run_time=duration_s)
+        )
+        self.play(
+            ApplyMethod(time_1.increment_value, 360, rate_func=smooth, run_time=5-1-duration_s)
+        )
+        self.wait(3)
+
+
+class BadS(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.set_camera_orientation(phi=75*DEGREES,theta=-60*DEGREES)
+
+        self.add(axes)
+        self.begin_ambient_camera_rotation()
+
+        sphere = ParametricSurface(
+            lambda u, v: np.array([
+                3*np.cos(u)*np.sin(v),
+                3*np.sin(u)*np.sin(v),
+                3*np.cos(v)
+            ]), u_min=0, u_max=TAU, v_min=0, v_max=TAU, checkerboard_colors=[RED_D, RED_E],
+            resolution=(15, 32))
+
+        self.play(LaggedStart(ShowCreation(sphere)), run_time=5)
+        self.wait(2)
+
+
+class AngleBadSThenT(ThreeDScene):
+    def construct(self):
+        degree_num_s = DecimalNumber(0, num_decimal_places=0)
+        time_0 = ValueTracker(0)
+        degree_num_s.add_updater(lambda num:num.set_value(time_0.get_value()))
+
+        degree_num_t = DecimalNumber(0, num_decimal_places=0)
+        time_1 = ValueTracker(0)
+        degree_num_t.add_updater(lambda num:num.set_value(time_1.get_value()))
+
+        degree_num_s.to_corner(UL + [-2, 0, 0])
+        degree_num_t.move_to(degree_num_s.get_center() + [0, -3/4, 0])
+
+        text_s = TextMobject("s:")
+        text_t = TextMobject("t:")
+
+        text_s.next_to(degree_num_s, LEFT)
+        text_t.next_to(degree_num_t, LEFT)
+
+        self.add_fixed_in_frame_mobjects(degree_num_s, degree_num_t, text_s, text_t)
+
+        duration_s = 1.15
+
+        self.play(
+            ApplyMethod(time_0.increment_value, 360, rate_func=smooth, run_time=duration_s)
+        )
+        self.play(
+            ApplyMethod(time_1.increment_value, 360, rate_func=smooth, run_time=5-1-duration_s)
+        )
+        self.wait(3)
+
+
+class ChangeOfCoords(Scene):
+    def construct(self):
+        description_0 = TextMobject("Cylindrical Coordinates")
+        description_0.to_corner(UL)
+
+        #cylindrical = TexMobject("\\DeclarePairedDelimiter\\set\\{ x[r_1, s_1, t], y[r_1, s_1, t], z[r_1, s_1, t] \\} = \\DeclarePairedDelimiter\\set\\{ ", "r_1","Cos[t],", "r_1", "Sin[t],", "s_1", " \\}")
+        #cylindrical[1].set_color(BLUE)
+        #cylindrical[3].set_color(BLUE)
+        #cylindrical[5].set_color(GREEN)
+
+        cylindrical_0 = TexMobject("\\{x[r_1, s_1, t], y[r_1, s_1, t], z[r_1, s_1, t]\\} = \\{r_1 Cos[t], r_1 Sin[t], s_1\\}")
+        cylindrical_1 = TexMobject("\\{x[r_1, s_1, t], y[r_1, s_1, t], z[r_1, s_1, t]\\} = \\{r_1 Cos[t], r_1 Sin[t], s_1\\}")
+
+        cylindrical_1.move_to(UP)
+
+        self.add(description_0)
+        self.add(cylindrical_0)
+        self.wait(2)
+        self.play(Transform(cylindrical_0, cylindrical_1), run_time=2)
+        self.wait()
+
+
 class CylinderToSphere(ThreeDScene):
     def construct(self):
         # THIS ANIMATION SHOULD PLAY DIRECTLY AFTER THE TRIGONOMETRIC CONVERSION FROM CYLINDRICAL TO SPHERICAL IS COMPLETE
@@ -512,26 +651,6 @@ class CylinderToSphere(ThreeDScene):
         self.add(axes)
         self.begin_ambient_camera_rotation()
 
-        '''
-        cylinder = ParametricSurface(
-            lambda u, v : np.array([
-                1.5*np.cos(v),
-                1.5*np.sin(v),
-                u
-            ]), u_min=0, u_max=3, v_min=0, v_max=TAU, checkerboard_colors=[GREEN_D, GREEN_E],
-            resolution=(15, 32)
-        )
-
-        sphere = ParametricSurface(
-            lambda u, v: np.array([
-                3*np.cos(u)*np.sin(v),
-                3*np.sin(u)*np.sin(v),
-                3*np.cos(v)
-            ]), u_min=0, u_max=TAU, v_min=0, v_max=PI, checkerboard_colors=[RED_D, RED_E],
-            resolution=(15, 32)
-            )
-        '''
-
         sphere = ParametricSurface(
             lambda u, v: np.array([
                 1.5*np.cos(u)*np.cos(v),
@@ -542,13 +661,39 @@ class CylinderToSphere(ThreeDScene):
 
         cylinder = ParametricSurface(
             lambda u, v: np.array([
-                np.cos(TAU * v),
-                np.sin(TAU * v),
-                2 * (1 - u)
+                1.5*np.cos(TAU * v),
+                1.5*np.sin(TAU * v),
+                3 * (1 - u)
             ]), checkerboard_colors=[GREEN_D, GREEN_E],
             resolution=(6, 32))#.fade(0.5)
 
         self.add(cylinder)
         self.wait(2)
         self.play(ReplacementTransform(cylinder, sphere), run_time=3)
+        self.wait(2)
+
+
+class CylinderToSphereMappings(Scene):
+    def construct(self):
+        c_x = TextMobject("x[r, s, t] = r Cos[t]").scale(0.9)
+        c_y = TextMobject("y[r, s, t] = r Sin[t]").scale(0.9)
+        c_z = TextMobject("z[r, s, t] = s").scale(0.9)
+
+        s_x = TextMobject("x[r, s, t] = r Cos[t] Sin[s]").scale(0.9)
+        s_y = TextMobject("y[r, s, t] = r Sin[t] Sin[s]").scale(0.9)
+        s_z = TextMobject("z[r, s, t] = r Cos[s]").scale(0.9)
+
+        c_x.move_to([-4.95, 3.5, 0])
+        c_y.move_to([-5, 2.5, 0])
+        c_z.move_to([-5.6, 1.5, 0])
+
+        s_x.move_to([-4.45, 3.5, 0])
+        s_y.move_to([-4.5, 2.5, 0])
+        s_z.move_to([-5.05, 1.5, 0])
+
+        self.add(c_x, c_y, c_z)
+        self.wait(2)
+        self.play(
+            ReplacementTransform(c_x, s_x), ReplacementTransform(c_y, s_y), ReplacementTransform(c_z, s_z), run_time=3
+        )
         self.wait(2)
