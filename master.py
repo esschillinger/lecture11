@@ -56,7 +56,7 @@ class CylinderHeight(ThreeDScene):
             ]), t_min=0, t_max=TAU, color=BLUE
         )
 
-        height = ParametricFunction(
+        height_0 = ParametricFunction(
             lambda t : np.array([
                 1.5 * np.cos(PI/4),
                 1.5 * np.sin(PI/4),
@@ -64,8 +64,16 @@ class CylinderHeight(ThreeDScene):
             ]), t_min=0, t_max=2, color=GREEN
         )
 
+        heights = [ParametricFunction(
+            lambda t : np.array([
+                1.5 * np.cos(i * PI/3),
+                1.5 * np.sin(i * PI/3),
+                (3 / 4) * t
+            ]), t_min=0, t_max=2, color=GREEN
+        ) for i in range(6)]
+
         self.add(base)
-        self.play(ShowCreation(height), run_time=5)
+        self.play(ShowCreation(heights[0]), ShowCreation(heights[1]), ShowCreation(heights[2]), ShowCreation(heights[3]), ShowCreation(heights[4]), ShowCreation(heights[5]), run_time=5)
         self.wait(2)
 
 
@@ -147,10 +155,41 @@ class CylindricalCoordinates(ThreeDScene):
         self.wait(2)
 
 
-class CylinderConversionFactor(Scene):
+class Paraboloid(ThreeDScene):
+    CONFIG = {
+        "x_min" : -3,
+        "x_max" : 3,
+        "y_min" : -3,
+        "y_max" : 3,
+        "z_min" : -3,
+        "z_max" : 3
+    }
     def construct(self):
-        # TODO : MAKE A MATRIX WITH THE DIFFERENT COMPONENTS AND ANIMATE TO COMPUTE THE CONVERSION FACTOR
-        print("TODO")
+        axes = ThreeDAxes()
+        self.add(axes)
+
+        self.set_camera_orientation(phi=75*DEGREES, theta=5*DEGREES)
+
+        xy_plane = ParametricSurface(
+            lambda u, v : np.array([
+                u,
+                v,
+                0
+            ]), u_min=-2, u_max=2, v_min=-2, v_max=2, checkerboard_colors=[TEAL_D, TEAL_E]
+        )
+
+        paraboloid = ParametricSurface(
+            lambda u, v: np.array([
+                2*np.cos(v)*u,
+                2*np.sin(v)*u,
+                2 - 2 * math.pow(u, 2)
+            ]),u_min=0, u_max=1, v_max=TAU, checkerboard_colors=[PURPLE_D, PURPLE_E], resolution=(10, 32)
+        )#.scale(2)
+
+        self.begin_ambient_camera_rotation()
+
+        self.play(ShowCreation(xy_plane), ShowCreation(paraboloid), run_time=4)
+        self.wait(3)
 
 
 class SphericalCoordinates(ThreeDScene):
