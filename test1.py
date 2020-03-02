@@ -17,6 +17,156 @@ class TestTransform(ThreeDScene):
         self.play(ReplacementTransform(t2, t3))
 
 
+class VisualizationTest(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.add(axes)
+
+        self.set_camera_orientation(phi=75*DEGREES, theta=25*DEGREES)
+
+        radians = PI/180
+
+        coordinates_r1 = ParametricFunction(
+            lambda t : np.array([
+                0,
+                0,
+                2.5 * t
+            ]), t_min=0, t_max=1, color=PINK
+        )
+
+        coordinates_r2 = ParametricFunction(
+            lambda t : np.array([
+                t * np.cos(0) * np.sin(PI/6),
+                t * np.sin(0) * np.sin(PI/6),
+                t * np.cos(PI/6)
+            ]), t_min=0, t_max=2.5, color=PINK
+        )
+
+        coordinates_r = ParametricFunction(
+            lambda t : np.array([
+                (2.5 * np.cos(PI/4) * np.sin(PI/6)) * t,
+                (2.5 * np.sin(PI/4) * np.sin(PI/6)) * t,
+                (2.5 * np.cos(PI/6)) * t
+            ]), t_min=0, t_max=1, color=PINK
+        )
+
+        coordinates_t = ParametricFunction(
+            lambda t : np.array([
+                2.5 * np.cos(t),
+                2.5 * np.sin(t),
+                0
+            ]), t_min=0, t_max=PI/4, color=WHITE
+        )
+
+        coordinates_s1 = ParametricFunction(
+            lambda t : np.array([
+                (2.5 * np.sin(t)),
+                0,
+                (2.5 * np.cos(t))
+            ]), t_min=0, t_max=PI/6, color=RED
+        )
+
+        coordinates_s = ParametricFunction(
+            lambda t : np.array([
+                (2.5 * np.cos(PI/4) * np.sin(t)),
+                (2.5 * np.sin(PI/4) * np.sin(t)),
+                (2.5 * np.cos(t))
+            ]), t_min=0, t_max=PI/6, color=RED
+        )
+
+        cone = ParametricSurface(
+            lambda u, v : np.array([
+                u * np.cos(v) * np.sin(PI/6),
+                u * np.sin(v) * np.sin(PI/6),
+                u * np.cos(PI/6)
+            ]), u_min=0, u_max=2.5, v_min=0, v_max=TAU, checkerboard_colors=[YELLOW_D, YELLOW_E]
+        )
+
+        angle = DecimalNumber(0, num_decimal_places=0)
+        time = ValueTracker(0)
+        angle.add_updater(lambda num:num.set_value(time.get_value()))
+
+        self.play(ShowCreation(coordinates_r2), ShowCreation(coordinates_s1))
+        self.wait()
+
+        #self.begin_ambient_camera_rotation()
+
+        #self.play(ShowCreation(coordinates_r1))
+        #self.wait()
+        #self.play(ShowCreation(coordinates_s1), ReplacementTransform(coordinates_r1, coordinates_r2))
+        #self.wait()
+        #self.play(ShowCreation(coordinates_t), ReplacementTransform(coordinates_r2, coordinates_r), ReplacementTransform(coordinates_s1, coordinates_s))
+        #self.remove(coordinates_s1, coordinates_r2)
+        #self.play(ShowCreation(cone))
+        #self.wait(2)
+
+
+class TRotation(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.add(axes)
+
+        self.set_camera_orientation(phi=75*DEGREES, theta=25*DEGREES)
+
+        coordinates_s1 = ParametricFunction(
+            lambda t : np.array([
+                (2.5 * np.sin(t)),
+                0,
+                (2.5 * np.cos(t))
+            ]), t_min=0, t_max=PI/6, color=RED
+        )
+
+        coordinates_r2 = ParametricFunction(
+            lambda t : np.array([
+                t * np.cos(0) * np.sin(PI/6),
+                t * np.sin(0) * np.sin(PI/6),
+                t * np.cos(PI/6)
+            ]), t_min=0, t_max=2.5, color=PINK
+        )
+
+        coordinates_s = ParametricSurface(
+            lambda u, v : np.array([
+                (2.5 * np.cos(t) * np.sin(PI/6)),
+                (2.5 * np.sin(t) * np.sin(PI/6)),
+                (2.5 * np.cos(PI/6))
+            ]), t_min=0, t_max=TAU, color=RED
+        )
+
+        coordinates_r = ParametricFunction(
+            lambda t : np.array([
+                t * np.cos(0) * np.sin(PI/6),
+                t * np.sin(0) * np.sin(PI/6),
+                t * np.cos(PI/6)
+            ]), t_min=0, t_max=2.5, color=PINK
+        )
+
+        coordinates_t = ParametricFunction(
+            lambda t : np.array([
+                t * np.cos(0) * np.sin(PI/6),
+                t * np.sin(0) * np.sin(PI/6),
+                t * np.cos(PI/6)
+            ]), t_min=0, t_max=2.5, color=PINK
+        )
+
+        '''
+        radians = PI/180
+
+        angle = DecimalNumber(0, num_decimal_places=0)
+        time = ValueTracker(0)
+        angle.add_updater(lambda num:num.set_value(time.get_value()))
+
+        self.play(ShowCreation(coordinates_r2), ShowCreation(coordinates_s1))
+        self.play(
+            ApplyMethod(time.increment_value, 360, rate_func=smooth, run_time=2)
+        )
+        '''
+        #self.play(ShowCreation(coordinates_r2), ShowCreation(coordinates_s1))
+        self.play(ShowCreation(coordinates_s))
+
+
+        self.wait()
+
+
 class AngleTest(ThreeDScene):
     def construct(self):
         degree_num_s = DecimalNumber(0, num_decimal_places=0)

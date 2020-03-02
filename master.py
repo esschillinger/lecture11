@@ -267,6 +267,86 @@ class SphericalCoordinates(ThreeDScene):
         self.wait(2)
 
 
+class VisualizationProblem(ThreeDScene):
+    def construct(self):
+        axes = ThreeDAxes()
+        self.add(axes)
+
+        self.set_camera_orientation(phi=75*DEGREES, theta=25*DEGREES)
+
+        radians = PI/180
+
+        coordinates_r1 = ParametricFunction(
+            lambda t : np.array([
+                0,
+                0,
+                2.5 * t
+            ]), t_min=0, t_max=1, color=MAROON
+        )
+
+        coordinates_r2 = ParametricFunction(
+            lambda t : np.array([
+                t * np.cos(0) * np.sin(PI/6),
+                t * np.sin(0) * np.sin(PI/6),
+                t * np.cos(PI/6)
+            ]), t_min=0, t_max=2.5, color=MAROON
+        )
+
+        '''
+        coordinates_r = ParametricFunction(
+            lambda t : np.array([
+                (2.5 * np.cos(PI/4) * np.sin(PI/6)) * t,
+                (2.5 * np.sin(PI/4) * np.sin(PI/6)) * t,
+                (2.5 * np.cos(PI/6)) * t
+            ]), t_min=0, t_max=1, color=PINK
+        )
+
+        coordinates_t = ParametricFunction(
+            lambda t : np.array([
+                2.5 * np.cos(t),
+                2.5 * np.sin(t),
+                2.5
+            ]), t_min=0, t_max=PI/4, color=WHITE
+        )
+        '''
+
+        coordinates_s1 = ParametricFunction(
+            lambda t : np.array([
+                (2.5 * np.sin(t)),
+                0,
+                (2.5 * np.cos(t))
+            ]), t_min=0, t_max=PI/6, color=RED
+        )
+
+        '''
+        coordinates_s = ParametricFunction(
+            lambda t : np.array([
+                (2.5 * np.cos(PI/4) * np.sin(t)),
+                (2.5 * np.sin(PI/4) * np.sin(t)),
+                (2.5 * np.cos(t))
+            ]), t_min=0, t_max=PI/6, color=RED
+        )
+        '''
+
+        cone = ParametricSurface(
+            lambda u, v : np.array([
+                v * np.cos(u) * np.sin(PI/6),
+                v * np.sin(u) * np.sin(PI/6),
+                v * np.cos(PI/6)
+            ]), u_min=0, u_max=TAU, v_min=0, v_max=2.5, checkerboard_colors=[MAROON_D, MAROON_E]
+        )
+
+        self.begin_ambient_camera_rotation()
+
+        self.play(ShowCreation(coordinates_r1))
+        self.wait()
+        self.play(ShowCreation(coordinates_s1), ReplacementTransform(coordinates_r1, coordinates_r2))
+        self.wait()
+        #self.play(ShowCreation(coordinates_t), ReplacementTransform(coordinates_r2, coordinates_r), ReplacementTransform(coordinates_s1, coordinates_s))
+        self.play(ShowCreation(cone))
+        self.wait(2)
+
+
 class CombinedCoordinates(ThreeDScene):
     def construct(self):
         axes = ThreeDAxes()
