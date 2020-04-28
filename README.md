@@ -1,6 +1,7 @@
 # Lecture 11--Spherical/Cylindrical Coordinates
 
-This repository exists for personal use and serves to host the variable files, particularly those associated with Manim.
+This repository was created originally for personal use and serves to host variable files, particularly those associated with Manim.
+Now public, materials associated with my second semester Internship observation can be found here, most importantly the lecture slideshow. Hi Mrs. Mertins and Mrs. Johnson!
 
 Though the animations and images themselves currently in use are located at `/renders/`, you may produce them yourself via `master.py`, after downloading and installing the necessary system requirements, namely [MikTeX](https://miktex.org/download), [Python 3.7](https://www.python.org/downloads/), [FFmpeg](https://ffmpeg.org/download.html), [Sox](https://sourceforge.net/projects/sox/), and, of course, [Manim](https://github.com/3b1b/manim).
 
